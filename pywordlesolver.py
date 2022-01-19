@@ -1,4 +1,5 @@
 from pprint import pprint
+from random import random
 
 result_list = set()
 
@@ -9,6 +10,31 @@ def prepare_word_set():
         for line in f:
             result_list.add(line.strip().lower())
 
+def choose_starting_word():
+    global result_list
+    # return a random word from the list "starting_list"
+    starting_list = ["frame","graze","windy","paint","gourd","swing","vapes","audio","farts","adieu","ouija","ready","pears","chief","touch","arise","roast","tears","meats","pizza"]
+    return starting_list[int(len(starting_list) * random())]
+
+def choose_most_probable_word():
+    global result_list
+    # The most probable word in the list is defined as the word that has the most diverse letters in it
+    # We want to count the number of diverse letters in each word and return the word with the most diverse letters
+    if len(result_list) == 0:
+        print("There is no word that meets the requirements")
+        return ""
+    else:
+        max_diversity = 0
+        max_diversity_word = ""
+        for word in result_list:
+            diversity = 0
+            for letter in word:
+                if letter not in max_diversity_word:
+                    diversity += 1
+            if diversity > max_diversity:
+                max_diversity = diversity
+                max_diversity_word = word
+        return max_diversity_word
 
 def remove_word_that_doesnt_start_with(letter):
     global result_list
@@ -62,6 +88,7 @@ def remove_word_that_hasnt_letter_in_pos(letter, pos):
 
 def main():
     global result_list
+    print(f"Most probable starting word: {choose_starting_word()}")
     while True:
         # Ask with the user what he/she wants to do
         print(
@@ -95,12 +122,14 @@ def main():
             pos = input("Enter the position: ")
             remove_word_that_hasnt_letter_in_pos(letter, pos)
         elif choice == "6":
-            print("Most probable word: " + str(result_list.pop()))
+            result_list.remove(word)
+            word = choose_most_probable_word()
+            print(f"Most probable word: {word}")
             continue
         else:
             print("Invalid choice")
-        # We always want to print a random word from the list "result_list"
-        print("Most probable word: " + str(result_list.pop()))
+        word = choose_most_probable_word()
+        print(f"Most probable word: {word}")
 
 
 if __name__ == "__main__":
