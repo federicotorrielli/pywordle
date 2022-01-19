@@ -2,7 +2,7 @@ from pprint import pprint
 from random import random
 
 result_list = set()
-
+most_probable_letters_in_5wordenglish = ['e','a','r','i','o','t','n','s']
 
 def prepare_word_set():
     # put the words in "5words.txt" into the set "word_set"
@@ -25,7 +25,7 @@ def choose_most_probable_word():
         return ""
     else:
         max_diversity = 0
-        max_diversity_word = ""
+        max_diversity_word_list = []
         for word in result_list:
             diversity = 0
             for letter in word:
@@ -33,8 +33,23 @@ def choose_most_probable_word():
                     diversity += 1
             if diversity > max_diversity:
                 max_diversity = diversity
-                max_diversity_word = word
-        return max_diversity_word
+                max_diversity_word_list = []
+                max_diversity_word_list.append(word)
+            else if diversity = max_diversity:
+                max_diversity_word_list.append(word)
+        
+        number_of_frequent_letters = 0
+        best_word = ""
+        for word in max_diversity_word_list:
+            count = 0
+            for letter in word:
+               if letter in most_probable_letters_in_5wordenglish:
+                    count += 1
+            if count > number_of_frequent_letters:
+                number_of_frequent_letters = count
+                best_word = word
+            
+        return best_word
 
 def remove_word_that_doesnt_start_with(letter):
     global result_list
