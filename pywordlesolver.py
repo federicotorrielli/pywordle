@@ -27,10 +27,8 @@ def choose_most_probable_word():
         max_diversity = 0
         max_diversity_word_list = []
         for word in result_list:
-            diversity = 0
-            for letter in word:
-                if letter not in max_diversity_word_list:
-                    diversity += 1
+            word_letters = ''.join(set(word))
+            diversity = len(word_letters)
             if diversity > max_diversity:
                 max_diversity = diversity
                 max_diversity_word_list = []
