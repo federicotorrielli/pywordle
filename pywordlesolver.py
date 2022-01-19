@@ -100,6 +100,15 @@ def remove_word_that_hasnt_letter_in_pos(letter, pos):
             temp_set.add(word)
     result_list = result_list - temp_set
 
+def remove_word_that_has_letter_in_pos(letter, pos):
+    global result_list
+    temp_set = set()
+    # Remove the words that has letter in pos from the list "result_list"
+    for word in result_list:
+        if letter in word[int(pos) - 1]:
+            temp_set.add(word)
+    result_list = result_list - temp_set
+
 
 def main():
     global result_list
@@ -108,13 +117,14 @@ def main():
         # Ask with the user what he/she wants to do
         print(
             """
-        1. Remove words that does not start with a letter
-        2. Remove words that does not end with a letter
+        1. Remove words that does NOT start with a letter
+        2. Remove words that does NOT end with a letter
         3. Remove words that contains a letter
-        4. Remove words that does not contain a letter
+        4. Remove words that does NOT contain a letter
         5. Remove words that has NOT a letter in a certain position
-        6. Gimme another word!
-        7. Exit
+        6. Remove words that has a letter in a certain position
+        7. Gimme another word!
+        8. Exit
         """
         )
         choice = input("Enter your choice: ")
@@ -137,6 +147,10 @@ def main():
             pos = input("Enter the position: ")
             remove_word_that_hasnt_letter_in_pos(letter, pos)
         elif choice == "6":
+            letter = input("Enter the letter: ")
+            pos = input("Enter the position: ")
+            remove_word_that_has_letter_in_pos(letter, pos)
+        elif choice == "7":
             result_list.remove(word)
             word = choose_most_probable_word()
             print(f"Most probable word: {word}")
