@@ -29,13 +29,13 @@ def choose_most_probable_word():
         for word in result_list:
             diversity = 0
             for letter in word:
-                if letter not in max_diversity_word:
+                if letter not in max_diversity_word_list:
                     diversity += 1
             if diversity > max_diversity:
                 max_diversity = diversity
                 max_diversity_word_list = []
                 max_diversity_word_list.append(word)
-            else if diversity = max_diversity:
+            elif diversity == max_diversity:
                 max_diversity_word_list.append(word)
         
         number_of_frequent_letters = 0
