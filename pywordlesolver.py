@@ -128,7 +128,7 @@ def main():
         """
         )
         choice = input("Enter your choice: ")
-        if choice == "7":
+        if choice == "8":
             break
         elif choice == "1":
             letter = input("Enter the letter: ")
