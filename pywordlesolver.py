@@ -11,13 +11,6 @@ def prepare_word_set():
         for line in f:
             result_list.add(line.strip().lower())
 
-
-def choose_starting_word():
-    global result_list
-    # return a random word from the list "starting_list"
-    word = choose_most_probable_word()
-    return word
-
 def choose_most_probable_word():
     global result_list
     # The most probable word in the list is defined as the word that has the most diverse letters in it
@@ -49,7 +42,7 @@ def choose_most_probable_word():
                 number_of_frequent_letters = count
                 best_word = word
         
-        if len(best_word) == 0
+        if len(best_word) == 0:
             best_word =  max_diversity_word_list[0]
         
         return best_word
@@ -114,7 +107,7 @@ def process_input(input_string, letter=True, position=False):
 
 def main():
     global result_list
-    print(f"Most probable starting word: {choose_starting_word()}")
+    print(f"Most probable starting word: {choose_most_probable_word()}")
     while True:
         print(
         """
