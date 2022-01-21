@@ -15,29 +15,8 @@ def prepare_word_set():
 def choose_starting_word():
     global result_list
     # return a random word from the list "starting_list"
-    starting_list = [
-        "frame",
-        "graze",
-        "windy",
-        "paint",
-        "gourd",
-        "swing",
-        "vapes",
-        "audio",
-        "farts",
-        "adieu",
-        "ouija",
-        "ready",
-        "pears",
-        "chief",
-        "touch",
-        "arise",
-        "roast",
-        "tears",
-        "meats",
-    ]
-    return starting_list[int(len(starting_list) * random())]
-
+    word = choose_most_probable_word()
+    return word
 
 def choose_most_probable_word():
     global result_list
@@ -69,7 +48,10 @@ def choose_most_probable_word():
             if count > number_of_frequent_letters:
                 number_of_frequent_letters = count
                 best_word = word
-
+        
+        if len(best_word) == 0
+            best_word =  max_diversity_word_list[0]
+        
         return best_word
 
 
