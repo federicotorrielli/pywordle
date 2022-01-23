@@ -86,8 +86,8 @@ def build(app):
         el.value = solver.most_probable_word[count]
         first_row.add(el)
     # We now define all the 5 buttons for the second row: when pressed, they should change color
-    second_row_pack = [toga.Button('Grey', style=Pack(flex=1, padding_left=10, width=50), on_press=change_color) for _
-                       in range(5)]
+    second_row_pack = [toga.Button('Grey', style=Pack(flex=1, padding_left=10, width=50, background_color='grey'),
+                                   on_press=change_color) for _ in range(5)]
     for el in second_row_pack:
         colors[el.id] = el.label
         second_row.add(el)
