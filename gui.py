@@ -5,16 +5,23 @@ from toga.style.pack import COLUMN, CENTER, ROW, Pack
 letters = {}
 colors = {}
 ready = False
-start = True # True if the game has not started yet
+start = True  # True if the game has not started yet
 solver = pywordlesolver.WordleSolver()
 
 
 def change_letters(widget):
     global ready
-    letters[widget.id] = widget.value.lower()
-    if len(letters) == 5:
-        ready = True
+    # The letter should be only one character
+    if len(widget.value) == 1:
+        widget.value = widget.value.lower()
+        letters[widget.id] = widget.value
+        if len(letters) == 5:
+            ready = True
+        else:
+            ready = False
     else:
+        letters[widget.id] = ''
+        widget.value = ''
         ready = False
 
 
@@ -40,8 +47,11 @@ def start_solver(output_text, first_row_pack):
     """
     global solver, start
     start = False
-    if ready:
-        solver.solve(list(letters.values()), list(colors.values()))
+    letter_values = list(letters.values())
+    if not all(elem.isalpha() for elem in letter_values):
+        output_text.text = 'Please enter only letters.'
+    elif ready:
+        solver.solve(letter_values, list(colors.values()))
         output_text.text = solver.most_probable_word.upper()
         for count, letters_holder in enumerate(first_row_pack):
             letters_holder.value = solver.most_probable_word[count]
@@ -75,7 +85,9 @@ def build(app):
         colors[el.id] = el.label
         second_row.add(el)
     # We now define the output text
-    output_text = toga.Label(solver.most_probable_word.upper(), style=Pack(flex=1, text_align=CENTER, padding_left=10, width=300, font_weight='bold', color='green'))
+    output_text = toga.Label(solver.most_probable_word.upper(),
+                             style=Pack(flex=1, text_align=CENTER, padding_left=10, width=300, font_weight='bold',
+                                        color='green'))
     third_row.add(output_text)
     # We now define the button to start the solver
     start_button = toga.Button('Start', style=Pack(flex=1, padding_left=10, width=300),
