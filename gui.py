@@ -40,6 +40,13 @@ def change_color(widget):
         widget.style.update(background_color='grey')
     colors[widget.id] = widget.label
 
+def reset(first_row_pack):
+    global letters, colors, ready, start, solver
+    clear_all(first_row_pack)
+    colors.clear()
+    ready = False
+    start = True
+    solver = pywordlesolver.WordleSolver()
 
 def start_solver(output_text, first_row_pack, start_button):
     """
@@ -54,9 +61,14 @@ def start_solver(output_text, first_row_pack, start_button):
         output_text.text = 'Please enter only letters.'
     elif ready:
         solver.solve(letter_values, list(colors.values()))
-        output_text.text = solver.most_probable_word.upper()
         for count, letters_holder in enumerate(first_row_pack):
             letters_holder.value = solver.most_probable_word[count]
+        if solver.end:
+            start_button.label = 'New Game'
+            output_text.text = f"You win! The word was {solver.most_probable_word.upper()}."
+            reset(first_row_pack)
+        else:
+            output_text.text = solver.most_probable_word.upper()
     else:
         output_text.text = 'Please fill all the inputs'
 

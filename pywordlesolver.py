@@ -160,6 +160,7 @@ class WordleSolver:
         self.most_probable_word = ""
         self.prepare_word_set()
         self.choose_most_probable_word()
+        self.end = False
 
     def prepare_word_set(self):
         with open("5words.txt", "r") as f:
@@ -242,4 +243,6 @@ class WordleSolver:
                 self.remove_word_that_not_contains(letter)
                 self.remove_word_that_has_letter_in_pos(letter, pos=letters.index(letter))
         self.choose_most_probable_word()
-        print(self.most_probable_word)
+
+        if len(self.word_set) == 1:
+                self.end = True
