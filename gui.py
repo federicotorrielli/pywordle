@@ -59,6 +59,12 @@ def start_solver(output_text, first_row_pack):
         output_text.text = 'Please fill all the inputs'
 
 
+def clear_all(first_row_pack):
+    for letters_holder in first_row_pack:
+        letters_holder.value = ''
+        letters.clear()
+
+
 def build(app):
     """
     The app should be divided in 3 rows: the first will contain 5 inputs, one for
@@ -75,8 +81,9 @@ def build(app):
     last_row = toga.Box()  # Row for the button to start the solver
     # We now define all the 5 inputs for the first row
     first_row_pack = [toga.TextInput(style=Pack(flex=1, padding_left=10), on_change=change_letters) for _ in range(5)]
-    for el in first_row_pack:
+    for count, el in enumerate(first_row_pack):
         el.style.update(width=50, text_align=CENTER)
+        el.value = solver.most_probable_word[count]
         first_row.add(el)
     # We now define all the 5 buttons for the second row: when pressed, they should change color
     second_row_pack = [toga.Button('Grey', style=Pack(flex=1, padding_left=10, width=50), on_press=change_color) for _
@@ -92,7 +99,10 @@ def build(app):
     # We now define the button to start the solver
     start_button = toga.Button('Start', style=Pack(flex=1, padding_left=10, width=300),
                                on_press=lambda widget: start_solver(output_text, first_row_pack))
+    clear_button = toga.Button('Clear', style=Pack(flex=1, padding_left=10, width=100),
+                               on_press=lambda widget: clear_all(first_row_pack))
     last_row.add(start_button)
+    last_row.add(clear_button)
 
     first_row.style.update(direction=ROW, padding_top=30, padding_bottom=10, padding_left=150)
     second_row.style.update(direction=ROW, padding_top=30, padding_bottom=10, padding_left=150)
