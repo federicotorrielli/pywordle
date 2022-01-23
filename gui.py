@@ -41,12 +41,14 @@ def change_color(widget):
     colors[widget.id] = widget.label
 
 
-def start_solver(output_text, first_row_pack):
+def start_solver(output_text, first_row_pack, start_button):
     """
     This function will start the solver and output the most probable word.
     """
     global solver, start
     start = False
+    start_button.label = 'New Guess'
+
     letter_values = list(letters.values())
     if not all(elem.isalpha() for elem in letter_values):
         output_text.text = 'Please enter only letters.'
@@ -98,7 +100,7 @@ def build(app):
     third_row.add(output_text)
     # We now define the button to start the solver
     start_button = toga.Button('Start', style=Pack(flex=1, padding_left=10, width=300),
-                               on_press=lambda widget: start_solver(output_text, first_row_pack))
+                               on_press=lambda widget: start_solver(output_text, first_row_pack, widget))
     clear_button = toga.Button('Clear', style=Pack(flex=1, padding_left=10, width=100),
                                on_press=lambda widget: clear_all(first_row_pack))
     last_row.add(start_button)
