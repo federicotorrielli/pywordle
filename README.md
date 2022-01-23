@@ -16,7 +16,7 @@ https://user-images.githubusercontent.com/31370059/149954779-1be49ec5-71e0-4b60-
 
 ## Requirements
 
-`pip install --pre toga`
+`pip install --pre toga` or `python3 -m pip install --pre toga` 
 
 ## How to use it
 
