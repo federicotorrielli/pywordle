@@ -25,3 +25,7 @@ https://user-images.githubusercontent.com/31370059/149954779-1be49ec5-71e0-4b60-
 ## How it works
 
 It's simpler than before, just input your word and the corresponding colors and the program will solve it for you.
+
+Watch this video for a demonstration:
+
+https://user-images.githubusercontent.com/31370059/150675258-08326958-7878-4fb6-8600-dab2c30a83b7.mp4
