@@ -10,8 +10,10 @@ solver = pywordlesolver.WordleSolver()
 
 
 def change_letters(widget):
+    """
+    This function will change the letters that have been pressed.
+    """
     global ready
-    # The letter should be only one character
     if len(widget.value) == 1:
         widget.value = widget.value.lower()
         letters[widget.id] = widget.value
@@ -40,15 +42,19 @@ def change_color(widget):
         widget.style.update(background_color='grey')
     colors[widget.id] = widget.label
 
-def reset(first_row_pack):
+
+def reset(first_row_pack, second_row_pack):
+    """
+    This function will reset the game.
+    """
     global letters, colors, ready, start, solver
-    clear_all(first_row_pack)
-    colors.clear()
+    clear_all(first_row_pack, second_row_pack)
     ready = False
     start = True
     solver = pywordlesolver.WordleSolver()
 
-def start_solver(output_text, first_row_pack, start_button):
+
+def start_solver(output_text, first_row_pack, second_row_pack, start_button, progress_bar, current_window):
     """
     This function will start the solver and output the most probable word.
     """
@@ -64,19 +70,29 @@ def start_solver(output_text, first_row_pack, start_button):
         for count, letters_holder in enumerate(first_row_pack):
             letters_holder.value = solver.most_probable_word[count]
         if solver.end:
-            start_button.label = 'New Game'
-            output_text.text = f"You win! The word was {solver.most_probable_word.upper()}."
-            reset(first_row_pack)
+            old_probable_word = solver.most_probable_word.upper()
+            reset(first_row_pack, second_row_pack)
+            current_window.info_dialog("You have won!",f"You win! The word was {old_probable_word}.")
+            output_text.text = "New game: the new probable word is {solver.most_probable_word.upper()}"
         else:
             output_text.text = solver.most_probable_word.upper()
+        progress_bar.value = ((solver.cardinality * 100) / solver.original_cardinality)
     else:
         output_text.text = 'Please fill all the inputs'
 
 
-def clear_all(first_row_pack):
+def clear_all(first_row_pack, second_row_pack):
+    """
+    This function will clear all the inputs.
+    """
     for letters_holder in first_row_pack:
         letters_holder.value = ''
         letters.clear()
+    for color_holder in second_row_pack:
+        color_holder.label = 'Grey'
+        color_holder.style.update(background_color='grey')
+        for c in colors:
+            colors[c] = 'Grey'
 
 
 def build(app):
@@ -88,10 +104,12 @@ def build(app):
     to output the most probable word to the following (3rd) row.
     """
     global start, solver
-    program_box = toga.Box()
+    # app.current_window.size = (500, 500)
+    program_box = toga.Box()  # The box that will contain all the other boxes
     first_row = toga.Box()  # Row for the letters
     second_row = toga.Box()  # Row for the colors
     third_row = toga.Box()  # Row for the output
+    fourth_row = toga.Box()  # Row for the progress bar
     last_row = toga.Box()  # Row for the button to start the solver
     # We now define all the 5 inputs for the first row
     first_row_pack = [toga.TextInput(style=Pack(flex=1, padding_left=10), on_change=change_letters) for _ in range(5)]
@@ -110,28 +128,35 @@ def build(app):
                              style=Pack(flex=1, text_align=CENTER, padding_left=10, width=300, font_weight='bold',
                                         color='green'))
     third_row.add(output_text)
+    # We now define the progress bar
+    progress_bar = toga.ProgressBar(max=100, value=1, style=Pack(flex=1, padding_left=10, width=300))
+    fourth_row.add(progress_bar)
     # We now define the button to start the solver
-    start_button = toga.Button('Start', style=Pack(flex=1, padding_left=10, width=300),
-                               on_press=lambda widget: start_solver(output_text, first_row_pack, widget))
-    clear_button = toga.Button('Clear', style=Pack(flex=1, padding_left=10, width=100),
-                               on_press=lambda widget: clear_all(first_row_pack))
+    start_button = toga.Button('Start', style=Pack(flex=1, padding_left=10, width=150),
+                               on_press=lambda widget: start_solver(output_text, first_row_pack, second_row_pack,
+                                                                    widget, progress_bar, app.current_window))
+    clear_button = toga.Button('Clear', style=Pack(flex=1, padding_left=10, width=150),
+                               on_press=lambda widget: clear_all(first_row_pack, second_row_pack))
     last_row.add(start_button)
     last_row.add(clear_button)
 
     first_row.style.update(direction=ROW, padding_top=30, padding_bottom=10, padding_left=150)
     second_row.style.update(direction=ROW, padding_top=30, padding_bottom=10, padding_left=150)
     third_row.style.update(direction=ROW, padding_top=30, padding_bottom=10, padding_left=150)
+    fourth_row.style.update(direction=ROW, padding_top=30, padding_bottom=10, padding_left=150)
     last_row.style.update(direction=ROW, padding_top=30, padding_bottom=10, padding_left=150)
     program_box.add(first_row)
     program_box.add(second_row)
     program_box.add(third_row)
+    program_box.add(fourth_row)
     program_box.add(last_row)
     program_box.style.update(direction=COLUMN)
     return program_box
 
 
 def main():
-    return toga.App('Wordle Solver', 'org.pywordlesolver', startup=build)
+    return toga.App('Wordle Solver', 'org.pywordlesolver', startup=build,
+                    author='Federico Torrielli & Lorenzo Sciandra', description='An automatic solver for Wordle')
 
 
 if __name__ == '__main__':

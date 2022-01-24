@@ -159,6 +159,8 @@ class WordleSolver:
         self.good_letters = set() # Letters that are in the word and should not be removed
         self.most_probable_word = ""
         self.prepare_word_set()
+        self.original_cardinality = len(self.word_set)
+        self.cardinality = len(self.word_set)
         self.choose_most_probable_word()
         self.end = False
 
@@ -242,6 +244,7 @@ class WordleSolver:
             else:
                 self.remove_word_that_not_contains(letter)
                 self.remove_word_that_has_letter_in_pos(letter, pos=letters.index(letter))
+        self.cardinality = abs(self.cardinality - len(self.word_set))
         self.choose_most_probable_word()
 
         if len(self.word_set) == 1:
