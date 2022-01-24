@@ -73,7 +73,7 @@ def start_solver(output_text, first_row_pack, second_row_pack, start_button, pro
             old_probable_word = solver.most_probable_word.upper()
             reset(first_row_pack, second_row_pack)
             current_window.info_dialog("You have won!", f"You win! The word was {old_probable_word}.")
-            output_text.text = "New game: the new probable word is {solver.most_probable_word.upper()}"
+            output_text.text = f"New game: the new probable word is {solver.most_probable_word.upper()}"
         else:
             output_text.text = solver.most_probable_word.upper()
         progress_bar.value = ((solver.cardinality * 100) / solver.original_cardinality)
