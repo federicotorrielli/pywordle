@@ -95,6 +95,20 @@ def clear_all(first_row_pack, second_row_pack):
             colors[c] = 'Grey'
 
 
+def prepare_content(first_row_pack, second_row_pack, main_window):
+    """
+    This function will prepare the content of the window to be automatically generated.
+    """
+    global solver, colors
+    response = main_window.question_dialog("Welcome to Wordle Solver!", "Do you want the program to automagically "
+                                                                        "insert the most probable starting word?")
+    if response:
+        for i in range(5):
+            first_row_pack[i].value = solver.most_probable_word[i]
+    for i in range(5):
+        colors[second_row_pack[i].id] = 'Grey'
+
+
 def build(app):
     """
     The app should be divided in 3 rows: the first will contain 5 inputs, one for
@@ -111,32 +125,31 @@ def build(app):
     third_row = toga.Box()  # Row for the output
     fourth_row = toga.Box()  # Row for the progress bar
     last_row = toga.Box()  # Row for the button to start the solver
-    # We now define all the 5 inputs for the first row
-    first_row_pack = [toga.TextInput(style=Pack(flex=1, padding_left=10), on_change=change_letters) for _ in range(5)]
-    for count, el in enumerate(first_row_pack):
-        el.style.update(width=50, text_align=CENTER)
-        el.value = solver.most_probable_word[count]
-        first_row.add(el)
-    # We now define all the 5 buttons for the second row: when pressed, they should change color
+    # Define all the 5 inputs for the first row
+    first_row_pack = [toga.TextInput(style=Pack(flex=1, padding_left=10, width=50, text_align=CENTER),
+                                     on_change=change_letters) for _ in range(5)]
+    # Define all the 5 buttons for the second row: when pressed, they should change color
     second_row_pack = [toga.Button('Grey', style=Pack(flex=1, padding_left=10, width=50, background_color='grey'),
                                    on_press=change_color) for _ in range(5)]
-    for el in second_row_pack:
-        colors[el.id] = el.label
-        second_row.add(el)
-    # We now define the output text
+    # Define the output text
     output_text = toga.Label(solver.most_probable_word.upper(),
                              style=Pack(flex=1, text_align=CENTER, padding_left=10, width=300, font_weight='bold',
                                         color='green'))
-    third_row.add(output_text)
-    # We now define the progress bar
+    # Define the progress bar
     progress_bar = toga.ProgressBar(max=100, value=1, style=Pack(flex=1, padding_left=10, width=300))
-    fourth_row.add(progress_bar)
-    # We now define the button to start the solver
+    # Define the button to start the solver
     start_button = toga.Button('Start', style=Pack(flex=1, padding_left=10, width=150),
                                on_press=lambda widget: start_solver(output_text, first_row_pack, second_row_pack,
                                                                     widget, progress_bar, app.current_window))
     clear_button = toga.Button('Clear', style=Pack(flex=1, padding_left=10, width=150),
                                on_press=lambda widget: clear_all(first_row_pack, second_row_pack))
+
+    # Add the row packs to the rows
+    for i in range(5):
+        first_row.add(first_row_pack[i])
+        second_row.add(second_row_pack[i])
+    third_row.add(output_text)
+    fourth_row.add(progress_bar)
     last_row.add(start_button)
     last_row.add(clear_button)
 
@@ -151,6 +164,7 @@ def build(app):
     program_box.add(fourth_row)
     program_box.add(last_row)
     program_box.style.update(direction=COLUMN)
+    prepare_content(first_row_pack, second_row_pack, app.current_window)
     return program_box
 
 
