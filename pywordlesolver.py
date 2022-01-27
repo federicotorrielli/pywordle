@@ -1,13 +1,14 @@
 from math import log
 
-frequencies = {"a": 0, "b": 0, "c": 0, "d": 0, "e": 0, "f": 0, "g": 0, "h": 0, "i": 0, "j": 0, "k": 0, "l": 0, "m": 0, 
-                    "n": 0, "o": 0, "p": 0, "q": 0, "r": 0, "s": 0, "t": 0, "u": 0, "v": 0, "w": 0, "x": 0, "y": 0, "z": 0}
-                    
+frequencies = {"a": 0, "b": 0, "c": 0, "d": 0, "e": 0, "f": 0, "g": 0, "h": 0, "i": 0, "j": 0, "k": 0, "l": 0, "m": 0,
+               "n": 0, "o": 0, "p": 0, "q": 0, "r": 0, "s": 0, "t": 0, "u": 0, "v": 0, "w": 0, "x": 0, "y": 0, "z": 0}
+
+
 class WordleSolver:
     def __init__(self):
         self.word_set = set()
         self.good_letters = set()  # Letters that are in the word and should not be removed
-        self.proved_letters = set() # Letters used in previous guess
+        self.proved_letters = set()  # Letters used in previous guess
         self.most_probable_word = ""
         self.prepare_word_set()
         self.original_cardinality = len(self.word_set)
@@ -22,10 +23,10 @@ class WordleSolver:
 
     def set_dictionary(self):
         for k in frequencies.keys():
-            freq = 1 #Laplace Correction
+            freq = 1  # Laplace Correction
             for word in self.word_set:
                 freq = freq + word.count(k)
-            frequencies[k] = freq/((len(self.word_set)*5)+26)
+            frequencies[k] = freq / ((len(self.word_set) * 5) + 26)
 
     def choose_most_probable_word(self):
         if len(self.word_set) == 0:
@@ -48,7 +49,7 @@ class WordleSolver:
                     max_diversity_word_list.append(word)
 
             best_word = ""
-            best_score = float('-inf')        
+            best_score = float('-inf')
 
             for word in max_diversity_word_list:
                 word_score = 0
@@ -60,7 +61,7 @@ class WordleSolver:
                 if word_score > best_score:
                     best_score = word_score
                     best_word = word
-            
+
             self.most_probable_word = best_word
 
     def remove_word_that_not_contains(self, letter):
