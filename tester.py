@@ -22,21 +22,25 @@ class PyWordleTester:
             words = f.read().splitlines()
         return random.sample(words, self.k)
 
-    def test(self, secret_sauce=0.05):
+    def test(self, secret_sauce):
         """
         Run all the k tests. Return the number of wins and fails
         """
         wins = 0
+        tries = []
         for i, solver in enumerate(self.solvers):
             word_to_guess = self.random_words[i]
             colors = ["Grey", "Grey", "Grey", "Grey", "Grey"]
-            for j in range(6):  # 6 possible guesses
+            for j in range(1,7):  # vogliamo contare il primo tentativo con 1 e l'ultimo con 6
                 current_guess = [letter for letter in solver.current_most_probable_word()]
                 colors = self.get_colors(current_guess, colors, word_to_guess)
                 if solver.solve(current_guess, colors, secret_sauce) == word_to_guess:
                     wins += 1
+                    tries.append(j)
                     break
-        return wins, self.k - wins
+        acc = wins/self.k
+        mean = sum(tries) / len(tries)
+        return acc, mean
 
     def get_colors(self, current_guess, current_colors, word_to_guess):
         """
@@ -59,16 +63,22 @@ class PyWordleTester:
 
 
 if __name__ == "__main__":
-    max_wins = 0
-    max_wins_array = []
-    for parameter in range(1, 100):
-        parameter = parameter/1000
-        tester = PyWordleTester(100)
-        wins, fails = tester.test(parameter)
-        if wins == max_wins:
-            max_wins_array.append(parameter)
-        if wins > max_wins:
-            max_wins = wins
-            max_wins_array = [parameter]
-            print(f"Next Max wins found: {max_wins} with parameter {parameter} | {max_wins_array}")
-    print(f"Max wins found: {max_wins} with parameter {max_wins_array}")
+    max_acc = 0
+    accs_array = []
+    means_array = []
+    for parameter in range(1, 61):
+        parameter = parameter * 0.05
+        tester = PyWordleTester(1000)
+        acc, mean = tester.test(parameter)
+        if acc == max_acc:
+            accs_array.append(parameter)
+            means_array.append(mean)
+        if acc > max_acc:
+            max_acc = acc
+            accs_array = [parameter]
+            means_array = [mean]
+    
+    print(f"Max accuracy found: {max_acc})      
+    for i in len(accs_array):
+        print(f"With parameter {accs_array[i]} we have mean {means_array[i]}")
+    
