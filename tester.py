@@ -31,14 +31,14 @@ class PyWordleTester:
         for i, solver in enumerate(self.solvers):
             word_to_guess = self.random_words[i]
             colors = ["Grey", "Grey", "Grey", "Grey", "Grey"]
-            for j in range(1,7):  # vogliamo contare il primo tentativo con 1 e l'ultimo con 6
+            for j in range(1, 7):  # vogliamo contare il primo tentativo con 1 e l'ultimo con 6
                 current_guess = [letter for letter in solver.current_most_probable_word()]
                 colors = self.get_colors(current_guess, colors, word_to_guess)
                 if solver.solve(current_guess, colors, secret_sauce) == word_to_guess:
                     wins += 1
                     tries.append(j)
                     break
-        acc = wins/self.k
+        acc = wins / self.k
         mean = sum(tries) / len(tries)
         return acc, mean
 
@@ -77,8 +77,7 @@ if __name__ == "__main__":
             max_acc = acc
             accs_array = [parameter]
             means_array = [mean]
-    
-    print(f"Max accuracy found: {max_acc})      
+
+    print(f"Max accuracy found: {max_acc}")
     for i in len(accs_array):
         print(f"With parameter {accs_array[i]} we have mean {means_array[i]}")
-    
