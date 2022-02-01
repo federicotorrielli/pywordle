@@ -30,21 +30,21 @@ class WordleSolver:
                 freq = freq + word.count(k)
             frequencies[k] = freq / (len(self.word_set) * 5)
 
-    def set_empprobabilities(self):
+    def set_empprobabilities(self, secret_sauce):
         for k in emp_probabilities.keys():
             count = 0
             for word in self.word_set:
                 if k in word:
                     count = count + 1
             # define emp probability with m-estimate of frequency of that letter
-            emp_probabilities[k] = (count + (frequencies[k] * len(self.word_set))) / (2 * len(self.word_set))
+            emp_probabilities[k] = (count + (frequencies[k] * (len(self.word_set) * secret_sauce))) / ((len(self.word_set) * secret_sauce) + len(self.word_set))
 
-    def choose_most_probable_word(self):
+    def choose_most_probable_word(self, secret_sauce=0.078):
         if len(self.word_set) == 0:
             return "There is no word that meets the requirements"
         else:
             self.set_dictionary()
-            self.set_empprobabilities()
+            self.set_empprobabilities(secret_sauce)
             max_diversity = 0
             max_diversity_word_list = []
             for word in self.word_set:
@@ -75,6 +75,7 @@ class WordleSolver:
                     best_word = word
 
             self.most_probable_word = best_word
+            return best_word
 
     def remove_word_that_not_contains(self, letter):
         temp_set = set()
@@ -83,6 +84,9 @@ class WordleSolver:
             if letter not in word:
                 temp_set.add(word)
         self.word_set = self.word_set - temp_set
+
+    def current_most_probable_word(self):
+        return self.most_probable_word
 
     def remove_word_that_contains(self, letter):
         temp_set = set()
@@ -108,9 +112,8 @@ class WordleSolver:
                 temp_set.add(word)
         self.word_set = self.word_set - temp_set
 
-    def solve(self, letters: list, colors: list):
+    def solve(self, letters: list, colors: list, secret_sauce=0.078):
         for letter in letters:
-
             if letter not in self.proved_letters:
                 self.proved_letters.add(letter)
 
@@ -128,7 +131,8 @@ class WordleSolver:
                 if letter not in self.good_letters:
                     self.good_letters.add(letter)
         self.cardinality = abs(self.cardinality - len(self.word_set))
-        self.choose_most_probable_word()
 
         if len(self.word_set) == 1:
             self.end = True
+
+        return self.choose_most_probable_word(secret_sauce)
