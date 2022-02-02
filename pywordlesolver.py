@@ -39,7 +39,7 @@ class WordleSolver:
             # define emp probability with m-estimate of frequency of that letter
             emp_probabilities[k] = (count + (frequencies[k] * (len(self.word_set) * secret_sauce))) / ((len(self.word_set) * secret_sauce) + len(self.word_set))
 
-    def choose_most_probable_word(self, secret_sauce=0.078):
+    def choose_most_probable_word(self, secret_sauce=0.947):
         if len(self.word_set) == 0:
             return "There is no word that meets the requirements"
         else:
@@ -112,7 +112,7 @@ class WordleSolver:
                 temp_set.add(word)
         self.word_set = self.word_set - temp_set
 
-    def solve(self, letters: list, colors: list, secret_sauce=0.078):
+    def solve(self, letters: list, colors: list, secret_sauce=0.947):
         for letter in letters:
             if letter not in self.proved_letters:
                 self.proved_letters.add(letter)
