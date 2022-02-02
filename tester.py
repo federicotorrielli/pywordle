@@ -79,5 +79,5 @@ if __name__ == "__main__":
             means_array = [mean]
 
     print(f"Max accuracy found: {max_acc}")
-    for i in len(accs_array):
-        print(f"With parameter {accs_array[i]} we have mean {means_array[i]}")
+    for i, el in enumerate(accs_array):
+        print(f"With parameter {el} we have mean {means_array[i]}")
