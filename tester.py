@@ -22,7 +22,7 @@ class PyWordleTester:
             words = f.read().splitlines()
         return random.sample(words, self.k)
 
-    def test(self, secret_sauce):
+    def test(self, bbq, ketchup):
         """
         Run all the k tests. Return the number of wins and fails
         """
@@ -32,9 +32,13 @@ class PyWordleTester:
             word_to_guess = self.random_words[i]
             colors = ["Grey", "Grey", "Grey", "Grey", "Grey"]
             for j in range(1, 7):  # vogliamo contare il primo tentativo con 1 e l'ultimo con 6
-                current_guess = [letter for letter in solver.current_most_probable_word()]
+                solver.set_sauce(bbq,ketchup)
+                if j == 1:
+                    current_guess = [letter for letter in solver.choose_most_probable_word()]
+                else:
+                    current_guess = [letter for letter in solver.current_most_probable_word()]
                 colors = self.get_colors(current_guess, colors, word_to_guess)
-                if solver.solve(current_guess, colors, secret_sauce) == word_to_guess:
+                if solver.solve(current_guess, colors) == word_to_guess:
                     wins += 1
                     tries.append(j)
                     break
@@ -64,20 +68,26 @@ class PyWordleTester:
 
 if __name__ == "__main__":
     max_acc = 0
-    accs_array = []
+    bbq_array = []
+    ketchup_array = []
     means_array = []
-    for parameter in range(1, 61):
-        parameter = parameter * 0.05
-        tester = PyWordleTester(1000)
-        acc, mean = tester.test(parameter)
-        if acc == max_acc:
-            accs_array.append(parameter)
-            means_array.append(mean)
-        if acc > max_acc:
-            max_acc = acc
-            accs_array = [parameter]
-            means_array = [mean]
+    for bbq in range(1, 61):
+        bbq = bbq * 0.05
+
+        for ketchup in range (1, 41):
+            ketchup = ketchup * 0.05
+            tester = PyWordleTester(1000)
+            acc, mean = tester.test(bbq, ketchup)
+            if acc == max_acc:
+                bbq_array.append(bbq)
+                ketchup_array.append(ketchup)
+                means_array.append(mean)
+            if acc > max_acc:
+                max_acc = acc
+                bbq_array = [bbq]
+                ketchup_array = [ketchup]
+                means_array = [mean]
 
     print(f"Max accuracy found: {max_acc}")
-    for i, el in enumerate(accs_array):
-        print(f"With parameter {el} we have mean {means_array[i]}")
+    for i in enumerate(bbq_array):
+        print(f"With bbq = {bbq_array[i]} and ketchup = {ketchup_array[i]} we have mean {means_array[i]}")
