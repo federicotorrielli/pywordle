@@ -73,8 +73,7 @@ if __name__ == "__main__":
     means_array = []
     for bbq in range(1, 61):
         bbq = bbq * 0.05
-
-        for ketchup in range (1, 41):
+        for ketchup in range(1, 41):
             ketchup = ketchup * 0.05
             tester = PyWordleTester(1000)
             acc, mean = tester.test(bbq, ketchup)
@@ -89,5 +88,5 @@ if __name__ == "__main__":
                 means_array = [mean]
 
     print(f"Max accuracy found: {max_acc}")
-    for i in enumerate(bbq_array):
+    for i, elem in enumerate(bbq_array):
         print(f"With bbq = {bbq_array[i]} and ketchup = {ketchup_array[i]} we have mean {means_array[i]}")
