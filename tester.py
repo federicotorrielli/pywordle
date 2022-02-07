@@ -1,5 +1,8 @@
 import pywordlesolver
 import random
+from mpl_toolkits import mplot3d
+import numpy as np
+import matplotlib.pyplot as plt
 
 
 class PyWordleTester:
@@ -71,12 +74,14 @@ if __name__ == "__main__":
     bbq_array = []
     ketchup_array = []
     means_array = []
-    for bbq in range(1, 61):
-        bbq = bbq * 0.05
-        for ketchup in range(1, 41):
-            ketchup = ketchup * 0.05
+    means_disribution = []
+    for bbq in range(0, 31):
+        bbq = bbq * 0.1
+        for ketchup in range(0, 21):
+            ketchup = ketchup * 0.1
             tester = PyWordleTester(1000)
             acc, mean = tester.test(bbq, ketchup)
+            means_disribution.append([bbq,ketchup,mean])
             if acc == max_acc:
                 bbq_array.append(bbq)
                 ketchup_array.append(ketchup)
@@ -88,5 +93,20 @@ if __name__ == "__main__":
                 means_array = [mean]
 
     print(f"Max accuracy found: {max_acc}")
+    x = []
+    y = []
+    z = []
+    for j in range(0,len(means_disribution)):
+        x.append(means_disribution[j][0])
+        y.append(means_disribution[j][1])
+        z.append(means_disribution[j][2])
+    xs = np.array(x)
+    ys = np.array(y)
+    zs = np.array(z)
+    fig = plt.figure()
+    ax = plt.axes(projection ='3d')
+    ax.plot3D(x, y, z, 'green')
+    ax.set_title('3D line plot geeks for geeks')
+    plt.show()
     for i, elem in enumerate(bbq_array):
         print(f"With bbq = {bbq_array[i]} and ketchup = {ketchup_array[i]} we have mean {means_array[i]}")
