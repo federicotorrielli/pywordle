@@ -108,6 +108,6 @@ if __name__ == "__main__":
     ax = plt.axes(projection='3d')
     ax.plot3D(x, y, z, 'green')
     ax.set_title('Plotting the means')
-    plt.show()
+    plt.savefig('means.png')
     for i, elem in enumerate(bbq_array):
         print(f"With bbq = {bbq_array[i]} and ketchup = {ketchup_array[i]} we have mean {means_array[i]}")
