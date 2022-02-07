@@ -76,9 +76,9 @@ if __name__ == "__main__":
     ketchup_array = []
     means_array = []
     means_distribution = []
-    for bbq in range(0, 31):
+    for bbq in range(1, 31):
         bbq = bbq * 0.1
-        for ketchup in range(0, 21):
+        for ketchup in range(1, 21):
             ketchup = ketchup * 0.1
             tester = PyWordleTester(1000)
             acc, mean = tester.test(bbq, ketchup)
