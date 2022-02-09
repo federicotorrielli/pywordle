@@ -31,11 +31,6 @@ class WordleSolver:
                 self.word_set.add(line.strip().lower())
 
     def set_all_probabilities(self):
-        sum1 = 0
-        sum2 = 0
-        sum3 = 0
-        sum4 = 0
-        sum5 = 0
         for k in frequencies.keys():
             freq = 0
             count = 0
@@ -60,7 +55,7 @@ class WordleSolver:
             frequencies[k] = freq / (len(self.word_set) * 5)
             # define emp probability with m-estimate of frequency of that letter
             emp_probabilities[k] = (count + (frequencies[k] * (len(self.word_set) * self.bbq))) / (
-                        (len(self.word_set) * self.bbq) + len(self.word_set))
+                    (len(self.word_set) * self.bbq) + len(self.word_set))
 
         for k in pos1.keys():
             pos1[k] = pos1[k] / len(self.word_set)
@@ -98,19 +93,19 @@ class WordleSolver:
                 for letter in word:
                     if letter not in self.proved_letters:
                         emp_probability = emp_probabilities.get(letter)
-                        prob_pos = 0
-                        if i == 1:
-                            prob_pos = pos1[letter]
-                        elif i == 2:
-                            prob_pos = pos2[letter]
-                        elif i == 3:
-                            prob_pos = pos3[letter]
-                        elif i == 4:
-                            prob_pos = pos4[letter]
-                        elif i == 5:
-                            prob_pos = pos5[letter]
-                        else:
-                            raise ValueError('Only words with 5 letters')
+                        match i:
+                            case 1:
+                                prob_pos = pos1.get(letter)
+                            case 2:
+                                prob_pos = pos2.get(letter)
+                            case 3:
+                                prob_pos = pos3.get(letter)
+                            case 4:
+                                prob_pos = pos4.get(letter)
+                            case 5:
+                                prob_pos = pos5.get(letter)
+                            case _:
+                                raise ValueError('Only words with 5 letters')
                         word_score = word_score + log(emp_probability) + log(prob_pos * self.ketchup)
                     i = i + 1
                 if word_score > best_score:
@@ -122,13 +117,16 @@ class WordleSolver:
 
     def remove_word_that_not_contains(self, letter):
         temp_set = set()
-        # Remove the words that doesn't contains "letter" from the list "result_list"
+        # Remove the words that doesn't contain "letter" from the list "result_list"
         for word in self.word_set:
             if letter not in word:
                 temp_set.add(word)
         self.word_set = self.word_set - temp_set
 
     def set_sauce(self, bbq, ketchup):
+        """
+        Why is it spicy?
+        """
         self.bbq = bbq
         self.ketchup = ketchup
 
@@ -137,7 +135,7 @@ class WordleSolver:
 
     def remove_word_that_contains(self, letter):
         temp_set = set()
-        # Remove the words that contains "letter" from the list "result_list"
+        # Remove the words that contain "letter" from the list "result_list"
         for word in self.word_set:
             if letter in word:
                 temp_set.add(word)
@@ -145,7 +143,7 @@ class WordleSolver:
 
     def remove_word_that_hasnt_letter_in_pos(self, letter, pos):
         temp_set = set()
-        # Remove the words that doesn't have letter in pos from the list "result_list"
+        # Remove the words that doesn't have a letter in pos from the list "result_list"
         for word in self.word_set:
             if letter not in word[int(pos)]:
                 temp_set.add(word)
