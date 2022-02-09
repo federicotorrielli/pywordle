@@ -93,19 +93,18 @@ class WordleSolver:
                 for letter in word:
                     if letter not in self.proved_letters:
                         emp_probability = emp_probabilities.get(letter)
-                        match i:
-                            case 1:
-                                prob_pos = pos1.get(letter)
-                            case 2:
-                                prob_pos = pos2.get(letter)
-                            case 3:
-                                prob_pos = pos3.get(letter)
-                            case 4:
-                                prob_pos = pos4.get(letter)
-                            case 5:
-                                prob_pos = pos5.get(letter)
-                            case _:
-                                raise ValueError('Only words with 5 letters')
+                        if i == 1:
+                            prob_pos = pos1[letter]
+                        elif i == 2:
+                            prob_pos = pos2[letter]
+                        elif i == 3:
+                            prob_pos = pos3[letter]
+                        elif i == 4:
+                            prob_pos = pos4[letter]
+                        elif i == 5:
+                            prob_pos = pos5[letter]
+                        else:
+                            raise ValueError('Only words with 5 letters')
                         word_score = word_score + log(emp_probability) + log(prob_pos * self.ketchup)
                     i = i + 1
                 if word_score > best_score:
