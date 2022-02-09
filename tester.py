@@ -1,5 +1,6 @@
 import random
 
+from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -76,10 +77,10 @@ if __name__ == "__main__":
     ketchup_array = []
     means_array = []
     means_distribution = []
-    for bbq in range(1, 31):
-        bbq = bbq * 0.1
-        for ketchup in range(1, 21):
-            ketchup = ketchup * 0.1
+    for bbq in range(10, 41):
+        bbq = bbq * 0.05
+        for ketchup in range(10, 41):
+            ketchup = ketchup * 0.05
             tester = PyWordleTester(1000)
             acc, mean = tester.test(bbq, ketchup)
             means_distribution.append([bbq, ketchup, mean])
@@ -104,10 +105,13 @@ if __name__ == "__main__":
     xs = np.array(x)
     ys = np.array(y)
     zs = np.array(z)
-    fig = plt.figure()
-    ax = plt.axes(projection='3d')
-    ax.plot3D(x, y, z, 'green')
-    ax.set_title('Plotting the means')
+    fig = plt.figure(figsize=(24,15))
+    ax = fig.add_subplot(111)
+    scat = ax.scatter(xs, ys, c=zs, marker="o", cmap="viridis")
+    plt.colorbar(scat)
+
+    ax.set_xlabel('BBQ')
+    ax.set_ylabel('Ketchup')
     plt.savefig('means.png')
     for i, elem in enumerate(bbq_array):
         print(f"With bbq = {bbq_array[i]} and ketchup = {ketchup_array[i]} we have mean {means_array[i]}")
