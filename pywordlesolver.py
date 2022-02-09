@@ -12,7 +12,7 @@ pos5 = frequencies.copy()
 
 
 class WordleSolver:
-    def __init__(self, bbq=1, ketchup=1):
+    def __init__(self, bbq=1.4, ketchup=1.0):
         self.word_set = set()
         self.good_letters = set()  # Letters that are in the word and should not be removed
         self.proved_letters = set()  # Letters used in previous guess
