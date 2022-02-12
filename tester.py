@@ -1,10 +1,10 @@
 import random
 
-from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import numpy as np
 
 import pywordlesolver
+from words import possible_words
 
 
 class PyWordleTester:
@@ -20,12 +20,7 @@ class PyWordleTester:
         self.random_words = self.prepare_random_words()
 
     def prepare_random_words(self):
-        """
-        Take from 5words.txt k random words and return a list of them
-        """
-        with open('5words.txt', 'r') as f:
-            words = f.read().splitlines()
-        return random.sample(words, self.k)
+        return random.sample(possible_words, self.k)
 
     def test(self, bbq, ketchup):
         """
@@ -105,7 +100,7 @@ if __name__ == "__main__":
     xs = np.array(x)
     ys = np.array(y)
     zs = np.array(z)
-    fig = plt.figure(figsize=(24,15))
+    fig = plt.figure(figsize=(24, 15))
     ax = fig.add_subplot(111)
     scat = ax.scatter(xs, ys, c=zs, marker="o", cmap="viridis")
     plt.colorbar(scat)
