@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import pywordlesolver
+import progressbar
 from words import possible_words
 
 
@@ -73,8 +74,9 @@ if __name__ == "__main__":
     means_array = []
     means_distribution = []
     for bbq in range(10, 41):
+        print(f"Iterazione {bbq}/41")
         bbq = bbq * 0.05
-        for ketchup in range(10, 41):
+        for ketchup in progressbar.progressbar(range(10, 41)):
             ketchup = ketchup * 0.05
             tester = PyWordleTester(1000)
             acc, mean = tester.test(bbq, ketchup)
