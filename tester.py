@@ -74,7 +74,6 @@ if __name__ == "__main__":
     means_array = []
     means_distribution = []
     for bbq in range(10, 41):
-        print(f"Iterazione {bbq}/41")
         bbq = bbq * 0.05
         for ketchup in progressbar.progressbar(range(10, 41)):
             ketchup = ketchup * 0.05
