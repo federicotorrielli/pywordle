@@ -13,13 +13,15 @@ pos5 = frequencies.copy()
 
 
 class WordleSolver:
-    def __init__(self, bbq=1.75, ketchup=1.6):
+    def __init__(self, bbq=1.5, ketchup=1.6, mayonnaise=1):
         self.word_set = set()
         self.good_letters = set()  # Letters that are in the word and should not be removed
         self.proved_letters = set()  # Letters used in previous guess
+        self.green_letters = set() # Letters fixed
         self.most_probable_word = ""
         self.ketchup = bbq
         self.bbq = ketchup
+        self.mayonnaise = mayonnaise
         self.prepare_word_set()
         self.original_cardinality = len(self.word_set)
         self.cardinality = len(self.word_set)
@@ -90,7 +92,7 @@ class WordleSolver:
                 word_score = 0
                 i = 1
                 for letter in word:
-                    if letter not in self.proved_letters:
+                    if letter not in self.green_letters:
                         emp_probability = emp_probabilities.get(letter)
                         if i == 1:
                             prob_pos = pos1[letter]
@@ -104,7 +106,7 @@ class WordleSolver:
                             prob_pos = pos5[letter]
                         else:
                             raise ValueError('Only words with 5 letters')
-                        word_score = word_score + log(emp_probability) + log(prob_pos * self.ketchup)
+                        word_score = word_score + log(emp_probability * self.mayonnaise) + log(prob_pos * self.ketchup)
                     i = i + 1
                 if word_score > best_score:
                     best_score = word_score
@@ -121,12 +123,13 @@ class WordleSolver:
                 temp_set.add(word)
         self.word_set = self.word_set - temp_set
 
-    def set_sauce(self, bbq, ketchup):
+    def set_sauce(self, bbq=1.5, ketchup=1.6, mayonnaise=1):
         """
         Why is it spicy?
         """
         self.bbq = bbq
         self.ketchup = ketchup
+        self.mayonnaise = mayonnaise
 
     def current_most_probable_word(self):
         return self.most_probable_word
@@ -163,6 +166,7 @@ class WordleSolver:
             if colors[letters.index(letter)] == "Green":
                 self.remove_word_that_not_contains(letter)
                 self.remove_word_that_hasnt_letter_in_pos(letter, pos=letters.index(letter))
+                self.green_letters.add(letter)
                 if letter not in self.good_letters:
                     self.good_letters.add(letter)
             elif colors[letters.index(letter)] == "Grey":
