@@ -23,7 +23,7 @@ class PyWordleTester:
     def prepare_random_words(self):
         return random.sample(possible_words, self.k)
 
-    def test(self, bbq, ketchup):
+    def test(self, mayonnaise, ketchup):
         """
         Run all the k tests. Return the number of wins and fails
         """
@@ -33,7 +33,7 @@ class PyWordleTester:
             word_to_guess = self.random_words[i]
             colors = ["Grey", "Grey", "Grey", "Grey", "Grey"]
             for j in range(1, 7):  # vogliamo contare il primo tentativo con 1 e l'ultimo con 6
-                solver.set_sauce(bbq, ketchup)
+                solver.set_sauce(1.5, ketchup, mayonnaise)
                 if j == 1:
                     current_guess = [letter for letter in solver.choose_most_probable_word()]
                 else:
@@ -69,24 +69,24 @@ class PyWordleTester:
 
 if __name__ == "__main__":
     max_acc = 0
-    bbq_array = []
+    mayonnaise_array = []
     ketchup_array = []
     means_array = []
     means_distribution = []
-    for bbq in range(10, 41):
-        bbq = bbq * 0.05
-        for ketchup in progressbar.progressbar(range(10, 41)):
-            ketchup = ketchup * 0.05
+    for mayonnaise in range(1, 26):
+        mayonnaise = mayonnaise * 0.12
+        for ketchup in progressbar.progressbar(range(1, 26)):
+            ketchup = ketchup * 0.12
             tester = PyWordleTester(1000)
-            acc, mean = tester.test(bbq, ketchup)
-            means_distribution.append([bbq, ketchup, mean])
+            acc, mean = tester.test(mayonnaise, ketchup)
+            means_distribution.append([mayonnaise, ketchup, mean])
             if acc == max_acc:
-                bbq_array.append(bbq)
+                mayonnaise_array.append(mayonnaise)
                 ketchup_array.append(ketchup)
                 means_array.append(mean)
             if acc > max_acc:
                 max_acc = acc
-                bbq_array = [bbq]
+                mayonnaise_array = [mayonnaise]
                 ketchup_array = [ketchup]
                 means_array = [mean]
 
@@ -106,8 +106,8 @@ if __name__ == "__main__":
     scat = ax.scatter(xs, ys, c=zs, marker="o", cmap="viridis")
     plt.colorbar(scat)
 
-    ax.set_xlabel('BBQ')
+    ax.set_xlabel('mayonnaise')
     ax.set_ylabel('Ketchup')
     plt.savefig('means.png')
-    for i, elem in enumerate(bbq_array):
-        print(f"With bbq = {bbq_array[i]} and ketchup = {ketchup_array[i]} we have mean {means_array[i]}")
+    for i, elem in enumerate(mayonnaise_array):
+        print(f"With mayonnaise = {mayonnaise_array[i]} and ketchup = {ketchup_array[i]} we have mean {means_array[i]}")
