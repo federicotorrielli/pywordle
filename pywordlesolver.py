@@ -17,7 +17,7 @@ class WordleSolver:
         self.word_set = set()
         self.good_letters = set()  # Letters that are in the word and should not be removed
         self.proved_letters = set()  # Letters used in previous guess
-        self.green_letters = set() # Letters fixed
+        self.green_letters = set()  # Letters fixed
         self.most_probable_word = ""
         self.ketchup = bbq
         self.bbq = ketchup

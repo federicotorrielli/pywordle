@@ -23,7 +23,7 @@ class PyWordleTester:
     def prepare_random_words(self):
         return random.sample(possible_words, self.k)
 
-    def test(self, mayonnaise, ketchup):
+    def test(self, sauce1, sauce2):
         """
         Run all the k tests. Return the number of wins and fails
         """
@@ -33,7 +33,7 @@ class PyWordleTester:
             word_to_guess = self.random_words[i]
             colors = ["Grey", "Grey", "Grey", "Grey", "Grey"]
             for j in range(1, 7):  # vogliamo contare il primo tentativo con 1 e l'ultimo con 6
-                solver.set_sauce(1.5, ketchup, mayonnaise)
+                solver.set_sauce(1.5, ketchup=sauce1, mayonnaise=sauce2)
                 if j == 1:
                     current_guess = [letter for letter in solver.choose_most_probable_word()]
                 else:
@@ -78,7 +78,7 @@ if __name__ == "__main__":
         for ketchup in progressbar.progressbar(range(1, 26)):
             ketchup = ketchup * 0.12
             tester = PyWordleTester(1000)
-            acc, mean = tester.test(mayonnaise, ketchup)
+            acc, mean = tester.test(ketchup, mayonnaise)
             means_distribution.append([mayonnaise, ketchup, mean])
             if acc == max_acc:
                 mayonnaise_array.append(mayonnaise)
@@ -106,7 +106,7 @@ if __name__ == "__main__":
     scat = ax.scatter(xs, ys, c=zs, marker="o", cmap="viridis")
     plt.colorbar(scat)
 
-    ax.set_xlabel('mayonnaise')
+    ax.set_xlabel('Mayonnaise')
     ax.set_ylabel('Ketchup')
     plt.savefig('means.png')
     for i, elem in enumerate(mayonnaise_array):
