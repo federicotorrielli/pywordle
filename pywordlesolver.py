@@ -1,26 +1,26 @@
 from math import log
 from words import possible_words
 
-frequencies = {"a": 0, "b": 0, "c": 0, "d": 0, "e": 0, "f": 0, "g": 0, "h": 0, "i": 0, "j": 0, "k": 0, "l": 0, "m": 0,
-               "n": 0, "o": 0, "p": 0, "q": 0, "r": 0, "s": 0, "t": 0, "u": 0, "v": 0, "w": 0, "x": 0, "y": 0, "z": 0}
-
-emp_probabilities = frequencies.copy()
-pos1 = frequencies.copy()
-pos2 = frequencies.copy()
-pos3 = frequencies.copy()
-pos4 = frequencies.copy()
-pos5 = frequencies.copy()
-
 
 class WordleSolver:
-    def __init__(self, bbq=1.5, ketchup=1.6, mayonnaise=1):
+    def __init__(self, bbq=1.5, ketchup=1.6, mayonnaise=1.0):
+        self.frequencies = {"a": 0, "b": 0, "c": 0, "d": 0, "e": 0, "f": 0, "g": 0, "h": 0, "i": 0, "j": 0, "k": 0,
+                            "l": 0, "m": 0, "n": 0, "o": 0, "p": 0, "q": 0, "r": 0, "s": 0, "t": 0, "u": 0, "v": 0,
+                            "w": 0, "x": 0, "y": 0, "z": 0}
+
+        self.emp_probabilities = self.frequencies.copy()
+        self.pos1 = self.frequencies.copy()
+        self.pos2 = self.frequencies.copy()
+        self.pos3 = self.frequencies.copy()
+        self.pos4 = self.frequencies.copy()
+        self.pos5 = self.frequencies.copy()
         self.word_set = set()
         self.good_letters = set()  # Letters that are in the word and should not be removed
         self.proved_letters = set()  # Letters used in previous guess
         self.green_letters = set()  # Letters fixed
         self.most_probable_word = ""
-        self.ketchup = bbq
-        self.bbq = ketchup
+        self.ketchup = ketchup
+        self.bbq = bbq
         self.mayonnaise = mayonnaise
         self.prepare_word_set()
         self.original_cardinality = len(self.word_set)
@@ -32,7 +32,7 @@ class WordleSolver:
         self.word_set = set(possible_words)
 
     def set_all_probabilities(self):
-        for k in frequencies.keys():
+        for k in self.frequencies.keys():
             freq = 0
             count = 0
             for word in self.word_set:
@@ -42,28 +42,28 @@ class WordleSolver:
                     positions = [pos + 1 for pos, char in enumerate(word) if char == k]
                     for pos in positions:
                         if pos == 1:
-                            pos1[k] = pos1[k] + 1
+                            self.pos1[k] = self.pos1[k] + 1
                         elif pos == 2:
-                            pos2[k] = pos2[k] + 1
+                            self.pos2[k] = self.pos2[k] + 1
                         elif pos == 3:
-                            pos3[k] = pos3[k] + 1
+                            self.pos3[k] = self.pos3[k] + 1
                         elif pos == 4:
-                            pos4[k] = pos4[k] + 1
+                            self.pos4[k] = self.pos4[k] + 1
                         elif pos == 5:
-                            pos5[k] = pos5[k] + 1
+                            self.pos5[k] = self.pos5[k] + 1
                         else:
                             raise ValueError('Only words with 5 letters')
-            frequencies[k] = freq / (len(self.word_set) * 5)
+            self.frequencies[k] = freq / (len(self.word_set) * 5)
             # define emp probability with m-estimate of frequency of that letter
-            emp_probabilities[k] = (count + (frequencies[k] * (len(self.word_set) * self.bbq))) / (
+            self.emp_probabilities[k] = (count + (self.frequencies[k] * (len(self.word_set) * self.bbq))) / (
                     (len(self.word_set) * self.bbq) + len(self.word_set))
 
-        for k in pos1.keys():
-            pos1[k] = pos1[k] / len(self.word_set)
-            pos2[k] = pos2[k] / len(self.word_set)
-            pos3[k] = pos3[k] / len(self.word_set)
-            pos4[k] = pos4[k] / len(self.word_set)
-            pos5[k] = pos5[k] / len(self.word_set)
+        for k in self.pos1.keys():
+            self.pos1[k] = self.pos1[k] / len(self.word_set)
+            self.pos2[k] = self.pos2[k] / len(self.word_set)
+            self.pos3[k] = self.pos3[k] / len(self.word_set)
+            self.pos4[k] = self.pos4[k] / len(self.word_set)
+            self.pos5[k] = self.pos5[k] / len(self.word_set)
 
     def choose_most_probable_word(self):
         if len(self.word_set) == 0:
@@ -93,17 +93,17 @@ class WordleSolver:
                 i = 1
                 for letter in word:
                     if letter not in self.green_letters:
-                        emp_probability = emp_probabilities.get(letter)
+                        emp_probability = self.emp_probabilities.get(letter)
                         if i == 1:
-                            prob_pos = pos1[letter]
+                            prob_pos = self.pos1[letter]
                         elif i == 2:
-                            prob_pos = pos2[letter]
+                            prob_pos = self.pos2[letter]
                         elif i == 3:
-                            prob_pos = pos3[letter]
+                            prob_pos = self.pos3[letter]
                         elif i == 4:
-                            prob_pos = pos4[letter]
+                            prob_pos = self.pos4[letter]
                         elif i == 5:
-                            prob_pos = pos5[letter]
+                            prob_pos = self.pos5[letter]
                         else:
                             raise ValueError('Only words with 5 letters')
                         word_score = word_score + log(emp_probability * self.mayonnaise) + log(prob_pos * self.ketchup)
@@ -123,7 +123,7 @@ class WordleSolver:
                 temp_set.add(word)
         self.word_set = self.word_set - temp_set
 
-    def set_sauce(self, bbq=1.5, ketchup=1.6, mayonnaise=1):
+    def set_sauce(self, bbq=1.5, ketchup=1.6, mayonnaise=1.0):
         """
         Why is it spicy?
         """

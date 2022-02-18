@@ -5,6 +5,7 @@ import numpy as np
 
 import pywordlesolver
 import progressbar
+import concurrent.futures
 from words import possible_words
 
 
@@ -23,17 +24,18 @@ class PyWordleTester:
     def prepare_random_words(self):
         return random.sample(possible_words, self.k)
 
-    def test(self, sauce1, sauce2):
+    def test(self, mayonket):
         """
         Run all the k tests. Return the number of wins and fails
         """
         wins = 0
         tries = []
+        sauce1, sauce2 = mayonket[0], mayonket[1]
         for i, solver in enumerate(self.solvers):
             word_to_guess = self.random_words[i]
             colors = ["Grey", "Grey", "Grey", "Grey", "Grey"]
             for j in range(1, 7):  # vogliamo contare il primo tentativo con 1 e l'ultimo con 6
-                solver.set_sauce(1.5, ketchup=sauce1, mayonnaise=sauce2)
+                solver.set_sauce(ketchup=sauce2, mayonnaise=sauce1)
                 if j == 1:
                     current_guess = [letter for letter in solver.choose_most_probable_word()]
                 else:
@@ -73,27 +75,28 @@ if __name__ == "__main__":
     ketchup_array = []
     means_array = []
     means_distribution = []
-    for mayonnaise in range(1, 26):
+    for mayonnaise in progressbar.progressbar(range(1, 26)):
         mayonnaise = mayonnaise * 0.12
-        for ketchup in progressbar.progressbar(range(1, 26)):
-            ketchup = ketchup * 0.12
-            tester = PyWordleTester(1000)
-            acc, mean = tester.test(ketchup, mayonnaise)
-            means_distribution.append([mayonnaise, ketchup, mean])
+        count = 0
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            ketchups = [ketchup * 0.12 for ketchup in range(1, 26)]
+            futures = [executor.submit(PyWordleTester(1000).test, [mayonnaise, ketchup]) for ketchup in ketchups]
+        for future in concurrent.futures.as_completed(futures):
+            acc, mean = future.result()
+            means_distribution.append([mayonnaise, ketchups[count], mean])
             if acc == max_acc:
                 mayonnaise_array.append(mayonnaise)
-                ketchup_array.append(ketchup)
+                ketchup_array.append(ketchups[count])
                 means_array.append(mean)
             if acc > max_acc:
                 max_acc = acc
                 mayonnaise_array = [mayonnaise]
-                ketchup_array = [ketchup]
+                ketchup_array = [ketchups[count]]
                 means_array = [mean]
+            count += 1
 
     print(f"Max accuracy found: {max_acc}")
-    x = []
-    y = []
-    z = []
+    x, y, z = [], [], []
     for j in range(0, len(means_distribution)):
         x.append(means_distribution[j][0])
         y.append(means_distribution[j][1])
