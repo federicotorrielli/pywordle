@@ -3,7 +3,7 @@ from words import possible_words
 
 
 class WordleSolver:
-    def __init__(self, bbq=1.5, ketchup=1.6, mayonnaise=1.0):
+    def __init__(self, bbq=1.5, ketchup=1.56, mayonnaise=0.84):
         self.frequencies = {"a": 0, "b": 0, "c": 0, "d": 0, "e": 0, "f": 0, "g": 0, "h": 0, "i": 0, "j": 0, "k": 0,
                             "l": 0, "m": 0, "n": 0, "o": 0, "p": 0, "q": 0, "r": 0, "s": 0, "t": 0, "u": 0, "v": 0,
                             "w": 0, "x": 0, "y": 0, "z": 0}
@@ -123,7 +123,7 @@ class WordleSolver:
                 temp_set.add(word)
         self.word_set = self.word_set - temp_set
 
-    def set_sauce(self, bbq=1.5, ketchup=1.6, mayonnaise=1.0):
+    def set_sauce(self, bbq=1.5, ketchup=1.56, mayonnaise=0.84):
         """
         Why is it spicy?
         """
