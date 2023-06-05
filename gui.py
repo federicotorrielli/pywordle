@@ -28,19 +28,15 @@ def change_letters(widget):
 
 
 def change_color(widget):
-    """
-    This function will change the color of the button that has been pressed.
-    """
-    if widget.label == 'Grey':
-        widget.label = 'Yellow'
-        widget.style.update(background_color='yellow')
-    elif widget.label == 'Yellow':
-        widget.label = 'Green'
-        widget.style.update(background_color='green')
-    elif widget.label == 'Green':
-        widget.label = 'Grey'
-        widget.style.update(background_color='grey')
-    colors[widget.id] = widget.label
+    if widget.text == 'Grey':
+        widget.text = 'Yellow'
+        colors[widget.id] = 'Yellow'
+    elif widget.text == 'Yellow':
+        widget.text = 'Green'
+        colors[widget.id] = 'Green'
+    else:
+        widget.text = 'Grey'
+        colors[widget.id] = 'Grey'
 
 
 def reset(first_row_pack, second_row_pack):
@@ -94,19 +90,24 @@ def clear_all(first_row_pack, second_row_pack):
         for c in colors:
             colors[c] = 'Grey'
 
+def my_callback():
+    print("prepare_content has finished executing")
 
-def prepare_content(first_row_pack, second_row_pack, main_window):
+def prepare_content(first_row_pack, second_row_pack, main_window, callback):
     """
     This function will prepare the content of the window to be automatically generated.
     """
     global solver, colors
-    response = main_window.question_dialog("Welcome to Wordle Solver!", "Do you want the program to automagically "
-                                                                        "insert the most probable starting word?")
-    if response:
+    def on_result(dialog, result):
+        if result:
+            for i in range(5):
+                first_row_pack[i].value = solver.most_probable_word[i]
         for i in range(5):
-            first_row_pack[i].value = solver.most_probable_word[i]
-    for i in range(5):
-        colors[second_row_pack[i].id] = 'Grey'
+            colors[second_row_pack[i].id] = 'Grey'
+        callback()
+
+    main_window.question_dialog("Welcome to Wordle Solver!", "Do you want the program to automagically "
+                                                                        "insert the most probable starting word?", on_result=on_result)
 
 
 def build(app):
@@ -164,7 +165,7 @@ def build(app):
     program_box.add(fourth_row)
     program_box.add(last_row)
     program_box.style.update(direction=COLUMN)
-    prepare_content(first_row_pack, second_row_pack, app.current_window)
+    prepare_content(first_row_pack, second_row_pack, app.current_window, my_callback)
     return program_box
 
 

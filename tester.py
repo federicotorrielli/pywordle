@@ -24,13 +24,13 @@ class PyWordleTester:
     def prepare_random_words(self):
         return random.sample(possible_words, self.k)
 
-    def test(self, mayonket):
+    def test(self, sauce_mixture):
         """
         Run all the k tests. Return the number of wins and fails
         """
         wins = 0
         tries = []
-        sauce1, sauce2 = mayonket[0], mayonket[1]
+        sauce1, sauce2 = sauce_mixture[0], sauce_mixture[1]
         for i, solver in enumerate(self.solvers):
             word_to_guess = self.random_words[i]
             colors = ["Grey", "Grey", "Grey", "Grey", "Grey"]
