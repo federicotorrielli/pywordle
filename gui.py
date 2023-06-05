@@ -31,12 +31,15 @@ def change_color(widget):
     if widget.text == 'Grey':
         widget.text = 'Yellow'
         colors[widget.id] = 'Yellow'
+        widget.style.update(background_color='yellow')
     elif widget.text == 'Yellow':
         widget.text = 'Green'
         colors[widget.id] = 'Green'
+        widget.style.update(background_color='green')
     else:
         widget.text = 'Grey'
         colors[widget.id] = 'Grey'
+        widget.style.update(background_color='grey')
 
 
 def reset(first_row_pack, second_row_pack):
