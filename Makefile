@@ -7,7 +7,7 @@ SRC = wordle_solver.c
 
 all: $(TARGET)
 
-$(TARGET): $(SRC) words.h
+$(TARGET): $(SRC) words.h config.h
 	$(CC) $(CFLAGS) -o $(TARGET) $(SRC) $(LDFLAGS)
 
 clean:

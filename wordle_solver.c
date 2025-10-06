@@ -4,6 +4,7 @@
 #include <math.h>
 #include <ctype.h>
 #include <ncurses.h>
+#include "config.h"
 #include "words.h"
 
 #define WORD_LEN 5
@@ -38,9 +39,9 @@ static inline char idx_to_char(int idx) {
 }
 
 void init_solver(Solver *s) {
-    s->bbq = 1.5;
-    s->ketchup = 1.56;
-    s->mayonnaise = 0.84;
+    s->bbq = BBQ;
+    s->ketchup = KETCHUP;
+    s->mayonnaise = MAYONNAISE;
     s->count = WORD_COUNT;
     
     memset(s->proved_letters, 0, ALPHA_SIZE);
@@ -256,19 +257,19 @@ void draw_ui(WINDOW *win, const char guesses[][WORD_LEN+1], const ColorState col
             
             if (guesses[row][col]) {
                 if (colors[row][col] == GREEN) {
-                    wattron(win, COLOR_PAIR(3));
+                    wattron(win, COLOR_PAIR(COLOR_GREEN_PAIR));
                 } else if (colors[row][col] == YELLOW) {
-                    wattron(win, COLOR_PAIR(2));
+                    wattron(win, COLOR_PAIR(COLOR_YELLOW_PAIR));
                 } else {
-                    wattron(win, COLOR_PAIR(1));
+                    wattron(win, COLOR_PAIR(COLOR_GREY_PAIR));
                 }
             }
             
             mvwprintw(win, 9 + row * 2, 16 + col * 2, "%c", c);
             
-            wattroff(win, COLOR_PAIR(1));
-            wattroff(win, COLOR_PAIR(2));
-            wattroff(win, COLOR_PAIR(3));
+            wattroff(win, COLOR_PAIR(COLOR_GREY_PAIR));
+            wattroff(win, COLOR_PAIR(COLOR_YELLOW_PAIR));
+            wattroff(win, COLOR_PAIR(COLOR_GREEN_PAIR));
             wattroff(win, A_REVERSE);
         }
     }
@@ -299,12 +300,12 @@ int main(void) {
     
     if (has_colors()) {
         start_color();
-        init_pair(1, COLOR_WHITE, COLOR_BLACK);
-        init_pair(2, COLOR_BLACK, COLOR_YELLOW);
-        init_pair(3, COLOR_BLACK, COLOR_GREEN);
+        init_pair(COLOR_GREY_PAIR, COLOR_WHITE, COLOR_BLACK);
+        init_pair(COLOR_YELLOW_PAIR, COLOR_BLACK, COLOR_YELLOW);
+        init_pair(COLOR_GREEN_PAIR, COLOR_BLACK, COLOR_GREEN);
     }
     
-    WINDOW *win = newwin(25, 80, 0, 0);
+    WINDOW *win = newwin(UI_HEIGHT, UI_WIDTH, 0, 0);
     keypad(win, TRUE);
     
     int running = 1;

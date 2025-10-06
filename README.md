@@ -48,6 +48,15 @@ brew install ncurses
 make
 ```
 
+### Configuration
+
+Edit `config.h` to customize solver parameters:
+- `BBQ`: M-estimate smoothing parameter (default: 1.5)
+- `KETCHUP`: Position probability weight (default: 1.56) 
+- `MAYONNAISE`: Letter frequency weight (default: 0.84)
+
+These parameters are tuned for optimal word guessing performance.
+
 ### Running
 
 ```bash
@@ -72,4 +81,13 @@ The C version is highly optimized with:
 - Efficient probability calculations
 - Fast word filtering algorithms
 - Minimal memory footprint (~500KB binary)
+
+### Suckless Philosophy
+
+This implementation follows suckless principles:
+- Single source file implementation
+- Configuration through header file (config.h)
+- No external dependencies except ncurses and standard library
+- Simple, readable code
+- Fast and efficient
 
