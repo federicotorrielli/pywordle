@@ -242,7 +242,7 @@ void draw_ui(WINDOW *win, const char guesses[][WORD_LEN+1], const ColorState col
     mvwprintw(win, 1, 2, "WORDLE SOLVER - TUI Edition");
     mvwprintw(win, 2, 2, "==============================");
     mvwprintw(win, 4, 2, "Controls: Arrow keys=move, Space=cycle color, Enter=next row, Q=quit");
-    mvwprintw(win, 5, 2, "Colors: Grey -> Yellow -> Green");
+    mvwprintw(win, 5, 2, "Colors: Grey -> Yellow -> Green (Enter needs all 5 letters filled)");
     mvwprintw(win, 7, 2, "Your Guesses:");
     
     for (int row = 0; row < MAX_ATTEMPTS; row++) {
@@ -255,7 +255,8 @@ void draw_ui(WINDOW *win, const char guesses[][WORD_LEN+1], const ColorState col
                 wattron(win, A_REVERSE);
             }
             
-            if (guesses[row][col]) {
+            // Show color even for empty cells if it's the current position or has a letter
+            if (guesses[row][col] || (row == current_row && col == current_col)) {
                 if (colors[row][col] == GREEN) {
                     wattron(win, COLOR_PAIR(COLOR_GREEN_PAIR));
                 } else if (colors[row][col] == YELLOW) {
@@ -342,7 +343,12 @@ int main(void) {
                 
             case '\n':
             case KEY_ENTER:
-                if (guesses[current_row][0] != '\0') {
+                // Check if we have a complete 5-letter word
+                if (guesses[current_row][0] != '\0' && 
+                    guesses[current_row][1] != '\0' &&
+                    guesses[current_row][2] != '\0' &&
+                    guesses[current_row][3] != '\0' &&
+                    guesses[current_row][4] != '\0') {
                     solve_step(&solver, guesses[current_row], colors[current_row]);
                     choose_best_word(&solver, suggestion);
                     if (current_row < MAX_ATTEMPTS - 1) {
@@ -355,14 +361,18 @@ int main(void) {
             default:
                 if (isalpha(ch)) {
                     guesses[current_row][current_col] = tolower(ch);
+                    // Ensure null termination
+                    if (current_col < WORD_LEN) {
+                        guesses[current_row][WORD_LEN] = '\0';
+                    }
                     if (current_col < WORD_LEN - 1) {
                         current_col++;
                     }
                 } else if (ch == KEY_BACKSPACE || ch == 127 || ch == '\b') {
-                    guesses[current_row][current_col] = '\0';
                     if (current_col > 0) {
                         current_col--;
                     }
+                    guesses[current_row][current_col] = '\0';
                 }
                 break;
         }
