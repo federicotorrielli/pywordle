@@ -278,6 +278,11 @@ void draw_ui(WINDOW *win, const char guesses[][WORD_LEN+1], const ColorState col
     mvwprintw(win, 22, 2, "Suggested word: %s", suggestion[0] ? suggestion : "-----");
     mvwprintw(win, 23, 2, "Remaining words: %d", remaining);
     
+    // Special display when only 1 word left
+    if (remaining == 1 && suggestion[0]) {
+        mvwprintw(win, 23, 25, " <- SOLUTION FOUND!");
+    }
+    
     wrefresh(win);
 }
 
@@ -354,6 +359,13 @@ int main(void) {
                     if (current_row < MAX_ATTEMPTS - 1) {
                         current_row++;
                         current_col = 0;
+                        // Copy green letters to next row
+                        for (int i = 0; i < WORD_LEN; i++) {
+                            if (colors[current_row - 1][i] == GREEN) {
+                                guesses[current_row][i] = guesses[current_row - 1][i];
+                                colors[current_row][i] = GREEN;
+                            }
+                        }
                     }
                 }
                 break;
