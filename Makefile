@@ -1,22 +1,39 @@
 .POSIX:
-CC = gcc
-CFLAGS = -O3 -Wall -Wextra -std=c99 -march=native
-LDFLAGS = -lncurses -lm
-TARGET = wordle_solver
-SRC = wordle_solver.c
 
-all: $(TARGET)
+CC = cc
+CFLAGS = -O2 -Wall -Wextra -Wpedantic -std=c99
+LDFLAGS =
+PREFIX = /usr/local
+BINDIR = $(PREFIX)/bin
 
-$(TARGET): $(SRC) words.h config.h
-	$(CC) $(CFLAGS) -o $(TARGET) $(SRC) $(LDFLAGS)
+PROGRAM = wordle-solver
+OBJECTS = wordle_solver.o solver.o
+TEST_PROGRAM = test-solver
+TEST_OBJECTS = test_solver.o solver.o
+
+all: $(PROGRAM)
+
+$(PROGRAM): $(OBJECTS)
+	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) -lncurses -lm
+
+$(TEST_PROGRAM): $(TEST_OBJECTS)
+	$(CC) $(LDFLAGS) -o $@ $(TEST_OBJECTS) -lm
+
+wordle_solver.o: wordle_solver.c solver.h config.h
+solver.o: solver.c solver.h config.h words.h
+test_solver.o: test_solver.c solver.h
+
+test: $(TEST_PROGRAM)
+	./$(TEST_PROGRAM)
 
 clean:
-	rm -f $(TARGET)
+	rm -f $(PROGRAM) $(TEST_PROGRAM) $(OBJECTS) test_solver.o
 
-install: $(TARGET)
-	install -m 755 $(TARGET) /usr/local/bin/
+install: $(PROGRAM)
+	install -d $(DESTDIR)$(BINDIR)
+	install -m 755 $(PROGRAM) $(DESTDIR)$(BINDIR)/$(PROGRAM)
 
 uninstall:
-	rm -f /usr/local/bin/$(TARGET)
+	rm -f $(DESTDIR)$(BINDIR)/$(PROGRAM)
 
-.PHONY: all clean install uninstall
+.PHONY: all clean install test uninstall

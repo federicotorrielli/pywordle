@@ -1,15 +1,19 @@
-/* wordle_solver configuration */
+/*
+ * Copyright 2022-2026 Federico Torrielli and Lorenzo Sciandra
+ * Licensed under the EUPL v. 1.2 only.
+ */
 
-/* Solver parameters - tune these for different solving strategies */
-static const double BBQ = 1.5;         /* M-estimate smoothing parameter */
-static const double KETCHUP = 1.56;    /* Position probability weight */
-static const double MAYONNAISE = 0.84; /* Letter frequency weight */
+#ifndef CONFIG_H
+#define CONFIG_H
 
-/* UI colors (if terminal supports colors) */
-static const int COLOR_GREY_PAIR = 1;
-static const int COLOR_YELLOW_PAIR = 2;
-static const int COLOR_GREEN_PAIR = 3;
+#define LETTER_WEIGHT 0.84
+#define POSITION_WEIGHT 1.56
 
-/* UI dimensions */
-static const int UI_WIDTH = 80;
-static const int UI_HEIGHT = 25;
+#define COLOR_GREY_PAIR 1
+#define COLOR_YELLOW_PAIR 2
+#define COLOR_GREEN_PAIR 3
+
+#define UI_WIDTH 80
+#define UI_HEIGHT 24
+
+#endif /* CONFIG_H */

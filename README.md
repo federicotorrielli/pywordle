@@ -1,93 +1,74 @@
-# PyWordle GUI
+# wordle-solver
 
-## Python GUI Version
+`wordle-solver` is a terminal program that narrows a bundled dictionary from
+Wordle feedback and suggests the next guess. It is written in C and uses
+ncurses for the interface.
 
-### Requirements
+## Build
 
-`pip install --pre toga` or `python3 -m pip install --pre toga` 
+You need a C99 compiler, `make`, and the ncurses development files.
 
-### How to use it
+On Debian or Ubuntu:
 
-`python3 gui.py`
-
-### How it works
-
-Just input your word and the corresponding colors and the program will solve it for you.
-
-Watch this video for a demonstration:
-
-https://user-images.githubusercontent.com/31370059/150675258-08326958-7878-4fb6-8600-dab2c30a83b7.mp4
-
-Updated demonstration with a particularly difficult case (and me trying to explain what the program *actually* does):
-
-https://user-images.githubusercontent.com/31370059/152317278-a85b38fd-02b1-4dd6-8770-867a0d822455.mp4
-
-## C TUI Version (Fast & Optimized)
-
-A suckless, fast, and ultra-optimized C implementation with a Text User Interface (TUI).
-
-### Requirements
-
-- GCC or compatible C compiler
-- ncurses library
-- make
-
-On Debian/Ubuntu:
-```bash
-sudo apt-get install build-essential libncurses-dev
+```sh
+sudo apt install build-essential libncurses-dev
 ```
 
-On macOS:
-```bash
+On macOS with Homebrew:
+
+```sh
 brew install ncurses
 ```
 
-### Building
+Build and run the program:
 
-```bash
+```sh
 make
+./wordle-solver
 ```
 
-### Configuration
+Run the solver tests with:
 
-Edit `config.h` to customize solver parameters:
-- `BBQ`: M-estimate smoothing parameter (default: 1.5)
-- `KETCHUP`: Position probability weight (default: 1.56) 
-- `MAYONNAISE`: Letter frequency weight (default: 0.84)
-
-These parameters are tuned for optimal word guessing performance.
-
-### Running
-
-```bash
-./wordle_solver
+```sh
+make test
 ```
 
-### How to use the TUI
+## Controls
 
-1. Use **arrow keys** to navigate between letter positions
-2. Type letters directly to fill in your guess
-3. Press **Space** to cycle through colors (Grey -> Yellow -> Green)
-4. Press **Enter** to submit the current row and get a new suggestion
-5. Press **Q** to quit
+- Type a letter to fill the selected tile.
+- Use Left and Right to move between tiles.
+- Press Space to cycle a tile through grey, yellow, and green.
+- Press Enter to submit a complete guess.
+- Press Backspace to clear a tile.
+- Press Escape to quit.
 
-The program will suggest the most probable word based on your input and display the number of remaining possible words.
+The terminal must be at least 80 columns wide and 24 rows high.
 
-### Performance
+## Solver
 
-The C version is highly optimized with:
-- O3 compiler optimizations
-- Native CPU architecture optimizations
-- Efficient probability calculations
-- Fast word filtering algorithms
-- Minimal memory footprint (~500KB binary)
+The bundled dictionary contains 12,972 five letter words. After each guess,
+the solver computes the feedback that every remaining candidate would have
+produced. A candidate remains only when its feedback exactly matches the
+submitted feedback. This rule handles repeated letters without special cases.
 
-### Suckless Philosophy
+The next guess is selected from the remaining candidates. The solver first
+prefers words with more untested letters, then ranks tied words by letter and
+position frequency. The two weights are defined in `config.h`.
 
-This implementation follows suckless principles:
-- Single source file implementation
-- Configuration through header file (config.h)
-- No external dependencies except ncurses and standard library
-- Simple, readable code
-- Fast and efficient
+This filtering rule follows the hard mode principle described by Chao-Lin Liu
+in [Using Wordle for Learning to Design and Compare Strategies](https://arxiv.org/abs/2205.11225).
 
+## Installation
+
+```sh
+sudo make install
+```
+
+Set `PREFIX` to install elsewhere. `DESTDIR` is also supported for packaging.
+
+## Authors and licence
+
+Copyright 2022 to 2026 Federico Torrielli and Lorenzo Sciandra.
+
+The project is licensed under the European Union Public Licence v. 1.2 only.
+The complete terms are in [LICENSE](LICENSE).

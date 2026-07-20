@@ -1,9 +1,14 @@
+/*
+ * Copyright 2022-2026 Federico Torrielli and Lorenzo Sciandra
+ * Licensed under the EUPL v. 1.2 only.
+ */
+
 #ifndef WORDS_H
 #define WORDS_H
 
 #define WORD_COUNT 12972
 
-static const char *possible_words[WORD_COUNT] = {
+static const char *const WORDS[WORD_COUNT] = {
     "aahed",
     "aalii",
     "aargh",
@@ -12978,4 +12983,4 @@ static const char *possible_words[WORD_COUNT] = {
     "zymic"
 };
 
-#endif // WORDS_H
+#endif /* WORDS_H */
